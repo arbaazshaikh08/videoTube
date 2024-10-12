@@ -162,8 +162,8 @@ const logoutUser = asyncHandler(async(req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set: {
-                refreshToken: undefined // this removes the field from document
+            $unset: {
+                refreshToken: 1 // this removes the field from document
             }
         },
         {
@@ -184,15 +184,15 @@ const logoutUser = asyncHandler(async(req, res) => {
 })
 
 const refreshAccessToken = asyncHandler(async(req , res) => {
-   const incomingRefreshtoken = req.cookies.refreshToken || req.body.refreshToken
+   const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
 
-   if(!incomingRefreshtoken){
-      throw new ApiError(401, "unauthorized request")
-   }
+   if (!incomingRefreshToken) {
+    throw new ApiError(401, "unauthorized request")
+}
 
    try {
     const decodedToken = jwt.verify(
-       incomingRefreshtoken,
+       incomingRefreshToken,
        process.env.REFRESH_TOKEN_SECRET
     )
  
