@@ -3,7 +3,8 @@ import {ApiError} from "../utils/ApiError.js";
 import { User} from "../models/user.model.js";
 import {uploadOnCloudinary} from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 const generateAccessAndRefereshTokens = async(userId) =>{
     try {
@@ -183,8 +184,8 @@ const logoutUser = asyncHandler(async(req, res) => {
     .json(new ApiResponse(200, {}, "User logged Out"))
 })
 
-const refreshAccessToken = asyncHandler(async(req , res) => {
-   const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+const refreshAccessToken = asyncHandler(async (req, res) => {
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
 
    if (!incomingRefreshToken) {
     throw new ApiError(401, "unauthorized request")
@@ -222,18 +223,18 @@ const refreshAccessToken = asyncHandler(async(req , res) => {
           200, 
           {accessToken, refreshToken: newRefreshToken},
           "Aceess token  refreshed"
-      )      
+       )      
     )
   } catch (error) {
-     throw new ApiError(401, error?.message ||"invalid refresh token")
-  }
+    throw new ApiError(401, error?.message || "Invalid refresh token")
+   }
 
 })
 
 const changeCurrentPassword =  asyncHandler ( async(req, res) => {
     const {oldPassword, newPassword} = req.body
 
-    const user = await user.findById(req.user?._id)
+    const user = await User.findById(req.user?._id)
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
 
     if(!isPasswordCorrect){
@@ -251,9 +252,12 @@ const changeCurrentPassword =  asyncHandler ( async(req, res) => {
 const getCurrentUser = asyncHandler(async(req,res) =>{
     return res
     .status(200)
-    .json(new ApiResponse(200,req.user, " user fetched successfully"))
+    .json(new ApiResponse
+        (200,
+        req.user,
+         " user fetched successfully"
+    ))
 })
-
 
 const updateAccountDetails = asyncHandler(async(req, res) => {
     const {fullName, email} = req.body
@@ -412,7 +416,7 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
     return res
     .status(200)
     .json(
-        new ApiResponse(200, chennel[0], "User channel fetched successfully")
+        new ApiResponse(200, channel[0], "User channel fetched successfully")
     )
 })
 
