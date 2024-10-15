@@ -225,9 +225,10 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
           "Aceess token  refreshed"
        )      
     )
-  } catch (error) {
-    throw new ApiError(401, error?.message || "Invalid refresh token")
-   }
+} catch (error) {
+    throw new ApiError(401, error?.message || "invalid refresh token");
+}
+    
 
 })
 
