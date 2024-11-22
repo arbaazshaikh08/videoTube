@@ -12,7 +12,7 @@ import {
 
 const router = Router();
 
-router.route("/crete-playlist/:ownerId").post(verifyJWT, createPlaylist);
+router.route("/create-playlist/:ownerId").post(verifyJWT, createPlaylist);
 
 router.route("/get-playlist-by-id/:playlistId").get(verifyJWT, getPlaylistById);
 
